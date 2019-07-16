@@ -10,7 +10,7 @@
             echo form_label('Nombre', 'nombre');/**texto label y atributo form */
             $input =array(
                 'name'=> 'nombre',
-                'value'=> '',
+                'value'=> $nombre, /**nombre de las variables de la vista así recupero los datos */
                 'class'=> 'form-control input-lg'
                 
             );
@@ -22,7 +22,7 @@
             echo form_label('Apellido', 'apellido');/**texto label y atributo form */
             $input =array(
                 'name'=> 'apellido',
-                'value'=> '',
+                'value'=> $apellido,
                 'class'=> 'form-control input-lg'
                 
             );
@@ -35,7 +35,7 @@
             $input =array(
                 'name'=> 'edad',
                 'type'=> 'number',
-                'value'=> '',
+                'value'=> $edad,
                 'class'=> 'form-control input-lg'
                 
             );
@@ -43,7 +43,7 @@
         ?>
         </div>
         <?php
-            echo form_submit('mysubmit', 'Enviar', "class='btn btn-primary'");
+            echo form_submit('mysubmit', 'Enviar', "class='btn btn-success'");
         ?>
         <?php echo form_close();?>
         </div>
