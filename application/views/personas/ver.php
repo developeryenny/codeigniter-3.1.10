@@ -5,10 +5,9 @@
     <body>
         <div class="container">
             <br>
-            <a href="listado" class="btn btn-success">Regresar</a>
+            <a href="../listado" class="btn btn-success">Regresar</a>
             <br><br>
      
-        <?php echo validation_errors();?>    <!--función global-->
         <?php echo form_open('');?>
         <div class="form-group">
             <?php 
@@ -16,6 +15,7 @@
             $input =array(
                 'name'=> 'nombre',
                 'value'=> $nombre, /**nombre de las variables de la vista así recupero los datos */
+                'readonly' => 'readonly',
                 'class'=> 'form-control input-lg'
                 
             );
@@ -28,6 +28,7 @@
             $input =array(
                 'name'=> 'apellido',
                 'value'=> $apellido,
+                'readonly' => 'readonly',
                 'class'=> 'form-control input-lg'
                 
             );
@@ -41,15 +42,14 @@
                 'name'=> 'edad',
                 'type'=> 'number',
                 'value'=> $edad,
+                'readonly' => 'readonly',
                 'class'=> 'form-control input-lg'
                 
             );
             echo form_input($input);
         ?>
         </div>
-        <?php
-            echo form_submit('mysubmit', 'Enviar', "class='btn btn-success'");
-        ?>
+     
         <?php echo form_close();?>
         </div>
     </body>

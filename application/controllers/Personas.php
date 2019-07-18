@@ -5,6 +5,7 @@ class Personas extends CI_Controller{
         parent::__construct();
         $this->load->helper('form');
         $this->load->model('Persona');
+        $this->load->library('form_validation');
         $this->load->database();
 
     }
@@ -12,9 +13,16 @@ class Personas extends CI_Controller{
 
     }
     public function listado(){
-
+      $vdata["personas"] = $this->Persona->findAll();
+      $this->load->view('personas/listado', $vdata);
+  
     }
     public function guardar($persona_id = null){
+      $this->form_validation->set_rules('nombre', 'Nombre', 'required|min_length[3]');/**para separar validaciones uso | */
+      $this->form_validation->set_rules('apellido', 'Apellido', 'required');
+      $this->form_validation->set_rules('edad', 'Edad', 'required');
+
+
         $vdata["nombre"] = $vdata["apellido"] = $vdata["edad"]= "";
         if (isset($persona_id)){/**si existe una persona */
            $persona = $this->Persona->find($persona_id); /**va buscar a la persona en bd */
@@ -34,19 +42,41 @@ class Personas extends CI_Controller{
            $vdata["nombre"] =$this->input->post("nombre"); /**recuperar el valor en los formularios */
            $vdata["apellido"] = $this->input->post("apellido");
            $vdata["edad"] =$this->input->post("edad");
-           if(isset($persona_id)){
-            $this->Persona->update($persona_id, $data); /**actualizar registros */
+           if ($this->form_validation->run()){/**nos devuelve true si las reglas de validaciones son correctas */
+             if(isset($persona_id)){
+                $this->Persona->update($persona_id, $data); /**actualizar registros */
             } else
               $this->Persona->insert($data);/**insertar registros en la bd */
-          }
+          }  
+        }
           /**presento el formulario vacío  */
         $this->load->view('personas/guardar', $vdata);/**directorio donde está colocada nuestra vistas  seguido del nombre de la vista*/
+
+    }
+   
+    public function ver($persona_id = null){
+      $persona = $this->Persona->find($persona_id);
+        if(!isset($persona_id) || !isset($persona)){
+          show_404();
+        }
+
+        if (isset($persona_id)){/**si existe una persona */
+         
+       /**si encontramos una persona devolvemos los datos de la persona */
+       if(isset($persona)){ /**nuestra vista */
+         $vdata["nombre"] = $persona->nombre; 
+         $vdata["apellido"] = $persona->apellido;
+         $vdata["edad"] = $persona->edad;
+       }
+     }
+   
+      $this->load->view('personas/ver', $vdata);/**directorio donde está colocada nuestra vistas  seguido del nombre de la vista*/
+
 
     }
     public function borrar(){
 
     }
-
 
 }
 ?>
