@@ -33,14 +33,9 @@ class Persona extends CI_Model {
         $this->db->update($this->table, $data);
     }
     function delete($id){
-        $this->db->where($this->table);
-        $this->db->update($this->table_id, $id);
-       
+        $this->db->where($this->table_id, $id);
+        $this->db->delete($this->table);
     }
-
-
-
-
 }
 
 

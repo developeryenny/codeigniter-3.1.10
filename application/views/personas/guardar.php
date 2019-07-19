@@ -5,7 +5,7 @@
     <body>
         <div class="container">
             <br>
-            <a href="listado" class="btn btn-success">Regresar</a>
+            <a href="<?php echo base_url()?>index.php/personas/listado" class="btn btn-success">Regresar</a>
             <br><br>
      
         <?php echo validation_errors();?>    <!--función global-->

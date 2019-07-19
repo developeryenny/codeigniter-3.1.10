@@ -4,13 +4,14 @@ class Personas extends CI_Controller{
     public function __construct(){
         parent::__construct();
         $this->load->helper('form');
+        $this->load->helper('url'); /**para hacer redirecciones */
         $this->load->model('Persona');
         $this->load->library('form_validation');
         $this->load->database();
 
     }
     function index() {
-
+      redirect("personas/listado"); /**http://[::1]/CodeIgniter-3.1.10/index.php/personas/ */
     }
     public function listado(){
       $vdata["personas"] = $this->Persona->findAll();
@@ -53,6 +54,18 @@ class Personas extends CI_Controller{
         $this->load->view('personas/guardar', $vdata);/**directorio donde está colocada nuestra vistas  seguido del nombre de la vista*/
 
     }
+    public function borrar($persona_id = null){
+      $this->Persona->delete($persona_id);
+      redirect("/personas/listado");
+
+    }
+    public function borrar_ajax($persona_id = null){
+      $this->Persona->delete($persona_id);
+      echo "hola1";
+
+    }
+
+
    
     public function ver($persona_id = null){
       $persona = $this->Persona->find($persona_id);
@@ -74,9 +87,6 @@ class Personas extends CI_Controller{
 
 
     }
-    public function borrar(){
-
-    }
-
+  
 }
 ?>
