@@ -24,14 +24,15 @@ class Personas extends CI_Controller{
       $this->form_validation->set_rules('edad', 'Edad', 'required');
 
 
-        $vdata["nombre"] = $vdata["apellido"] = $vdata["edad"]= "";
+     $error= $vdata["image"] = $vdata["nombre"] = $vdata["apellido"] = $vdata["edad"]= "";
         if (isset($persona_id)){/**si existe una persona */
            $persona = $this->Persona->find($persona_id); /**va buscar a la persona en bd */
-        /**si encontramos una persona devolvemos los datos de la persona */
+        /**si  encontramos una persona devolvemos los datos de la persona */
         if(isset($persona)){ /**nuestra vista */
           $vdata["nombre"] = $persona->nombre; 
           $vdata["apellido"] = $persona->apellido;
           $vdata["edad"] = $persona->edad;
+          $vdata["image"] = $persona->image;
         }
       }
         if ($this->input->server("REQUEST_METHOD") == "POST"){/**reconocer tipo de petición */
@@ -40,20 +41,53 @@ class Personas extends CI_Controller{
            $data["nombre"] =$this->input->post("nombre"); /*obtener los valores de los formularios*/
            $data["apellido"] =$this->input->post("apellido");
            $data["edad"] =$this->input->post("edad");
+
            $vdata["nombre"] =$this->input->post("nombre"); /**recuperar el valor en los formularios */
            $vdata["apellido"] = $this->input->post("apellido");
            $vdata["edad"] =$this->input->post("edad");
+
            if ($this->form_validation->run()){/**nos devuelve true si las reglas de validaciones son correctas */
-             if(isset($persona_id)){
+            
+            if(isset($persona_id)){
                 $this->Persona->update($persona_id, $data); /**actualizar registros */
             } else
-              $this->Persona->insert($data);/**insertar registros en la bd */
+                $persona_id = $this->Persona->insert($data);/**insertar registros en la bd */
+                $error = $this->do_upload($persona_id);
+                if ($error === "") /**si no tengo errores recargo la página con el redirect */
+                  redirect("/personas/guardar/$persona_id");
           }  
         }
-          /**presento el formulario vacío  */
-        $this->load->view('personas/guardar', $vdata);/**directorio donde está colocada nuestra vistas  seguido del nombre de la vista*/
+        $vdata["error"] = $error;
+     
+        /**presento el formulario vacío  */
+        $this->load->view('/personas/guardar', $vdata);/**directorio donde está colocada nuestra vistas  seguido del nombre de la vista*/
 
     }
+    private function do_upload($persona_id)
+    {
+            $config['upload_path']          = 'uploads';
+            $config['allowed_types']        = 'gif|jpg|png';
+            $config['max_size']             = 2048 ;
+            $config['max_width']            = 1024;
+            $config['max_height']           = 768;
+
+            $this->load->library('upload', $config);
+
+            if (!$this->upload->do_upload('image')){
+                  return $this->upload->display_errors();
+            }else{
+          
+                   $data = $this->upload->data();
+                   var_dump($data); /** para saber que nos devuelve la data */
+                   $name = $data["file_name"] . $data["file-ext"];
+                   $save = array(
+                    'image' => $name
+                );
+                $this->Persona->update($persona_id, $save);
+            }
+            return "";
+    }
+
     public function borrar($persona_id = null){
       $this->Persona->delete($persona_id);
       redirect("/personas/listado");
