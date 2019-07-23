@@ -10,6 +10,14 @@ class Personas extends CI_Controller{
         $this->load->database();
 
     }
+    function llamar_helper(){
+        $this->load->helper('list_person_helper');
+        /**var_dump(list_person());*/
+        /**$vdata["personas"] = list_person(); 
+        $this->load->view('personas/llamar_helper', $vdata);*/
+        /**otra manera de usar el helper, es llamarla directaente y llamar la función helper desde view como lost_person()*/
+        $this->load->view('personas/llamar_helper');
+    }
     function index() {
       redirect("personas/listado"); /**http://[::1]/CodeIgniter-3.1.10/index.php/personas/ */
     }
