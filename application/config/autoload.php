@@ -58,7 +58,7 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array();
+$autoload['libraries'] = array("session"); //cargo de manera global la session y ya no me hace falta llamarla en ningún lado.
 
 /*
 | -------------------------------------------------------------------

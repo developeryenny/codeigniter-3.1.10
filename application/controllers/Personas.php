@@ -6,8 +6,10 @@ class Personas extends CI_Controller{
         $this->load->helper('form');
         $this->load->helper('url'); /**para hacer redirecciones */
         $this->load->model('Persona');
+       // $this->load->library('session');
         $this->load->library('form_validation');
         $this->load->database();
+       
 
     }
     function llamar_helper(){
@@ -15,13 +17,28 @@ class Personas extends CI_Controller{
         /**var_dump(list_person());*/
         /**$vdata["personas"] = list_person(); 
         $this->load->view('personas/llamar_helper', $vdata);*/
-        /**otra manera de usar el helper, es llamarla directaente y llamar la función helper desde view como lost_person()*/
+        /**otra manera de usar el helper, es llamarla directaente 
+         * y llamar la función helper desde view como lost_person()*/
         $this->load->view('personas/llamar_helper');
     }
     function index() {
+      echo $this->session->set_userdata('item', 'PHE'); //usuario item y la key
+      echo  $this->session->userdata('item');
       redirect("personas/listado"); /**http://[::1]/CodeIgniter-3.1.10/index.php/personas/ */
     }
     public function listado(){
+      /* $newdata = array( //segunda manera
+        'username'  => 'johndoe',
+        'email'     => 'johndoe@some-site.com',
+        'logged_in' => TRUE
+      );
+
+      //echo $this->session->set_userdata('item', 'PHE'); //primera manera
+      //echo  $this->session->userdata('item');
+      $this->session->set_userdata($newdata);//segunda manera */
+      //echo  $this->session->userdata('username'); //segunda manera
+      echo  $this->session->userdata('name'); //tercera manera
+     // $this->session->unset_userdata('name'); //eliminar session
       $vdata["personas"] = $this->Persona->findAll();
       $this->load->view('personas/listado', $vdata);
   

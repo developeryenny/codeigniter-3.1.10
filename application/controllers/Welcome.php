@@ -7,6 +7,11 @@ class Welcome extends CI_Controller {
 		parent::__construct();
 		$this->load->database(); /**cargamos nuestra base de datos */
 
+		$newdata = array( //segunda manera
+			'name'  => 'Lola'
+		  );
+		$this->session->set_userdata($newdata);
+
 	}
 
 	/**
