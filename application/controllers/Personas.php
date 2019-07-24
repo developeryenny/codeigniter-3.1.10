@@ -22,11 +22,13 @@ class Personas extends CI_Controller{
         $this->load->view('personas/llamar_helper');
     }
     function index() {
-      echo $this->session->set_userdata('item', 'PHE'); //usuario item y la key
-      echo  $this->session->userdata('item');
+     // echo $this->session->set_userdata('item', 'PHE'); //usuario item y la key
+     // echo  $this->session->userdata('item');
+     $this->session->set_flashdata('item', 'value');
       redirect("personas/listado"); /**http://[::1]/CodeIgniter-3.1.10/index.php/personas/ */
     }
     public function listado(){
+      echo $this->session->flashdata('item'); //tipo de session que solo se consulta una sola vez
       /* $newdata = array( //segunda manera
         'username'  => 'johndoe',
         'email'     => 'johndoe@some-site.com',
@@ -37,7 +39,7 @@ class Personas extends CI_Controller{
       //echo  $this->session->userdata('item');
       $this->session->set_userdata($newdata);//segunda manera */
       //echo  $this->session->userdata('username'); //segunda manera
-      echo  $this->session->userdata('name'); //tercera manera
+     // echo  $this->session->userdata('name'); //tercera manera
      // $this->session->unset_userdata('name'); //eliminar session
       $vdata["personas"] = $this->Persona->findAll();
       $this->load->view('personas/listado', $vdata);
@@ -78,10 +80,13 @@ class Personas extends CI_Controller{
             } else
                 $persona_id = $this->Persona->insert($data);/**insertar registros en la bd */
                 $error = $this->do_upload($persona_id);
-                if ($error === "") /**si no tengo errores recargo la página con el redirect */
-                  redirect("/personas/guardar/$persona_id");
+              if ($error === ""){ /**si no tengo errores recargo la página con el redirect */
+                $this->session->set_flashdata('message', 'Guardado exitoso de' . $vdata["nombre"]);     
+              // redirect("/personas/guardar/$persona_id");
+               redirect("/personas/listado"); }
           }  
-        }
+          }  
+       
         $vdata["error"] = $error;
      
         /**presento el formulario vacío  */
