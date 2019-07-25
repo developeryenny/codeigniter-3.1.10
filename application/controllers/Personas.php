@@ -6,7 +6,6 @@ class Personas extends CI_Controller{
         $this->load->helper('form');
         $this->load->helper('url'); /**para hacer redirecciones */
         $this->load->model('Persona');
-       // $this->load->library('session');
         $this->load->library('form_validation');
         $this->load->database();
        
@@ -14,11 +13,6 @@ class Personas extends CI_Controller{
     }
     function llamar_helper(){
         $this->load->helper('list_person_helper');
-        /**var_dump(list_person());*/
-        /**$vdata["personas"] = list_person(); 
-        $this->load->view('personas/llamar_helper', $vdata);*/
-        /**otra manera de usar el helper, es llamarla directaente 
-         * y llamar la función helper desde view como lost_person()*/
         $this->load->view('personas/llamar_helper');
     }
     function index() {
@@ -28,21 +22,11 @@ class Personas extends CI_Controller{
       redirect("personas/listado"); /**http://[::1]/CodeIgniter-3.1.10/index.php/personas/ */
     }
     public function listado(){
-      echo $this->session->flashdata('item'); //tipo de session que solo se consulta una sola vez
-      /* $newdata = array( //segunda manera
-        'username'  => 'johndoe',
-        'email'     => 'johndoe@some-site.com',
-        'logged_in' => TRUE
-      );
-
-      //echo $this->session->set_userdata('item', 'PHE'); //primera manera
-      //echo  $this->session->userdata('item');
-      $this->session->set_userdata($newdata);//segunda manera */
-      //echo  $this->session->userdata('username'); //segunda manera
-     // echo  $this->session->userdata('name'); //tercera manera
-     // $this->session->unset_userdata('name'); //eliminar session
-      $vdata["personas"] = $this->Persona->findAll();
-      $this->load->view('personas/listado', $vdata);
+      $name = $this->input->get("name");// veo mi parámetro
+  
+      $vdata["personas"] = $this->Persona->search($name);
+      $view["view"] = $this->load->view('personas/listado', $vdata, TRUE); 
+      $this->load->view('personas/body', $view);
   
     }
     public function guardar($persona_id = null){
@@ -63,8 +47,6 @@ class Personas extends CI_Controller{
         }
       }
         if ($this->input->server("REQUEST_METHOD") == "POST"){/**reconocer tipo de petición */
-           /* echo "POST";*/ /**pruebas */
-           /*echo $this->input->post("nombre");*/ /*pruebas*/
            $data["nombre"] =$this->input->post("nombre"); /*obtener los valores de los formularios*/
            $data["apellido"] =$this->input->post("apellido");
            $data["edad"] =$this->input->post("edad");
@@ -88,10 +70,11 @@ class Personas extends CI_Controller{
           }  
        
         $vdata["error"] = $error;
-     
+        $view["view"] = $this->load->view('personas/guardar', $vdata, TRUE);
+          
         /**presento el formulario vacío  */
-        $this->load->view('/personas/guardar', $vdata);/**directorio donde está colocada nuestra vistas  seguido del nombre de la vista*/
-
+        // $this->load->view('/personas/guardar', $vdata);/**directorio donde está colocada nuestra vistas  seguido del nombre de la vista*/
+        $this->load->view('personas/body', $view);
     }
     private function do_upload($persona_id)
     {
@@ -128,9 +111,6 @@ class Personas extends CI_Controller{
       echo "hola1";
 
     }
-
-
-   
     public function ver($persona_id = null){
       $persona = $this->Persona->find($persona_id);
         if(!isset($persona_id) || !isset($persona)){
@@ -146,9 +126,9 @@ class Personas extends CI_Controller{
          $vdata["edad"] = $persona->edad;
        }
      }
-   
-      $this->load->view('personas/ver', $vdata);/**directorio donde está colocada nuestra vistas  seguido del nombre de la vista*/
-
+      $view["view"] = $this->load->view('personas/ver', $vdata, TRUE);
+      // $this->load->view('personas/ver', $vdata);/**directorio donde está colocada nuestra vistas  seguido del nombre de la vista*/
+       $this->load->view('personas/body', $view);
 
     }
   

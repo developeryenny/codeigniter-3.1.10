@@ -23,6 +23,14 @@ class Persona extends CI_Model {
         return $query->result(); /**nos devuelve una colección de objetos un array */
 
     }
+    function search($name){
+        $this->db->select();
+        $this->db->from($this->table);
+        $this->db->like("nombre", $name);
+        $query = $this->db->get();
+        return $query->result(); /**nos devuelve una colección de objetos un array */
+
+    }
     function insert($data){
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
