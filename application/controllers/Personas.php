@@ -21,10 +21,30 @@ class Personas extends CI_Controller{
      $this->session->set_flashdata('item', 'value');
       redirect("personas/listado"); /**http://[::1]/CodeIgniter-3.1.10/index.php/personas/ */
     }
-    public function listado(){
-      $name = $this->input->get("name");// veo mi parámetro
-  
-      $vdata["personas"] = $this->Persona->search($name);
+    public function buscar_listado(){
+      redirect("/personas/listado/1?nombre=".$this->input->get("nombre"));
+    }
+    public function listado($pag =1 ){
+      $pag--;//a página le resto 1 para que empiece desde cero
+      if ($pag < 0){
+        $pag = 0;
+      }
+
+      $page_size = 2;
+      $offset = $pag * $page_size; //si colocaramos 1 traería los siguientes dos registros.
+     // echo $this->Persona->count();
+ 
+      $nombre = $this->input->get("nombre");// veo mi parámetro
+     // $vdata["personas"] = $this->Persona->search($nombre);
+     if($nombre !=""){
+      $offset = 0;
+      $pag=1;
+     }
+   
+      $vdata["personas"] = $this->Persona->pagination( $page_size, $offset, $nombre);
+      $vdata["current_pag"] = $pag + 1;
+      $vdata["nombre"] = $nombre;
+      $vdata["last_page"]  =  ceil($this->Persona->count($nombre) /$page_size);
       $view["view"] = $this->load->view('personas/listado', $vdata, TRUE); 
       $this->load->view('personas/body', $view);
   

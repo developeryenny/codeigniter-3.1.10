@@ -23,10 +23,28 @@ class Persona extends CI_Model {
         return $query->result(); /**nos devuelve una colección de objetos un array */
 
     }
-    function search($name){
+    function pagination($pag_size, $offset, $nombre){ //tamaño de la página  y número de registros a mostrar
         $this->db->select();
         $this->db->from($this->table);
-        $this->db->like("nombre", $name);
+        $this->db->limit($pag_size, $offset);
+        if($nombre != "")
+            $this->db->like("nombre", $nombre);
+        $query = $this->db->get();
+        return $query->result(); /**nos devuelve una colección de objetos un array */
+
+    } 
+    function count($nombre) {
+        $this->db->select();
+        $this->db->from($this->table);
+        if($nombre != "")
+        $this->db->like("nombre", $nombre);
+        $query = $this->db->get();
+        return $query->num_rows(); //cantidad de registros.
+    }
+    function search($nombre){
+        $this->db->select();
+        $this->db->from($this->table);
+        $this->db->like("nombre", $nombre);
         $query = $this->db->get();
         return $query->result(); /**nos devuelve una colección de objetos un array */
 
